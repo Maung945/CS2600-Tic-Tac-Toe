@@ -8,18 +8,20 @@ void initialize() {
     int i, j;
     for(i = 1; i <= 3; i++) {
         for(j = 1; j <= 3; j++) {
-            board[i][j] = ',';
+            board[i][j] = '.';
         }
     }
 }
 
 void displayBoard() {
+    printf("\nGood!!\n");
+    printf("\nThe current status is:\n");
     printf("+-----+\n");
     for(int i = 1; i <= 3; i++) {
         printf("|");
         for(int j = 1; j <= 3; j++) {
             printf("%c", board[i][j]);
-            rintf("|");
+            printf("|");
         }
         printf("\n");
         printf("+-----+\n");
@@ -29,10 +31,9 @@ void displayBoard() {
 void playerMove() {
     int row, column;
     bool correctMove = false;
-    printf("\n Player %d", playerTurn, ":Make your move\n");
+    printf("\nPlayer %d :Make your move\n" , playerTurn);
     while(!correctMove) {
-        scanf("%d ", row);
-        scanf("%d ", column);
+        scanf("%d %d", &row, &column);
         if(row < 1 || row > 3 || column < 1 || column > 3) {
             printf("Invalid Entry, Try Again!\n");
             correctMove = false;
@@ -81,6 +82,50 @@ char checkWin() {
     return '&';
 }
 
+bool checkDraw() {
+    for(int i = 1; i <= 3; i++) {
+        for(int j = 1; j <= 3; j++) {
+            if(board[i][j] == '.')
+                return false;
+        }
+    }
+    return true;
+}
+
+bool checkResult() {
+    char result = checkWin();
+    switch(result) {
+        case 'O':
+            displayBoard();
+            printf("Player 1(O) Won!!\n");
+            return true;
+        case 'X':
+            displayBoard();
+            printf("Player 2(X) Won!!\n");
+            return true;
+        case '&':
+            if(checkDraw()) {
+                displayBoard();
+                printf("Match Drawn!\n");
+                return true;
+            }
+        break;
+    }
+    return false;
+}   
+
+void playGame() {
+    while(1) {
+        
+        displayBoard();
+        playerMove();
+        if(checkResult()) {
+            break;
+        }
+    }
+    printf("\n");
+}
+
 int main() {
     // prompt user for game they wish to play
     int choice;
@@ -91,19 +136,13 @@ int main() {
     
     printf("Enter your choice (1 or 2): ");
     scanf("%d", &choice);
-
+    initialize();
     switch(choice) {
         case 1:
             printf("You have entered choice 1: \n");
             printf("==========================\n");
-            while(1) {
-                displayBoard();
-                playerMove();
-                if(checkResult()) {
-                    break;
-                }
-            }
-            //break;
+            playGame();
+            break;
         case 2:
             printf("You have entered choice 2: \n");
             printf("==========================\n");
